@@ -2,26 +2,17 @@ import streamlit as st
 import yfinance as yf
 import pandas as pd
 import ast
+from datetime import date
 
-st.set_page_config(
-    page_title="Doji Tarayıcı",
-    page_icon="📊",
-    layout="wide"
-)
+st.set_page_config(page_title="Doji Tarayıcı", page_icon="📊", layout="wide")
 
 st.title("📊 Peş Peşe Doji Tarayıcı")
-
-st.write("Hisse listesini köşeli parantezli Python liste formatında yapıştırabilirsin.")
 
 default_list = '''[
 "FRIGO.IS","SNGYO.IS","TURSG.IS"
 ]'''
 
-tickers_text = st.text_area(
-    "Hisse listesi",
-    value=default_list,
-    height=260
-)
+tickers_text = st.text_area("Hisse listesi", value=default_list, height=260)
 
 doji_ratio = st.slider(
     "Doji hassasiyeti",
@@ -38,10 +29,11 @@ min_consecutive = st.number_input(
     value=2
 )
 
-period = st.selectbox(
-    "Veri aralığı",
-    ["1mo", "3mo", "6mo", "1y"],
-    index=1
+period = st.selectbox("Veri aralığı", ["1mo", "3mo", "6mo", "1y"], index=1)
+
+exclude_today = st.checkbox(
+    "Bugünkü oluşan mumu hariç tut",
+    value=True
 )
 
 
@@ -63,6 +55,7 @@ def parse_tickers(text):
 def clean_yfinance_df(df):
     if isinstance(df.columns, pd.MultiIndex):
         df.columns = df.columns.get_level_values(0)
+
     df = df.loc[:, ~df.columns.duplicated()]
     return df
 
@@ -71,7 +64,9 @@ if st.button("🚀 Taramayı Başlat"):
     tickers = parse_tickers(tickers_text)
 
     results = []
+    all_debug = []
     errors = []
+
     progress = st.progress(0)
     status = st.empty()
 
@@ -91,12 +86,19 @@ if st.button("🚀 Taramayı Başlat"):
                 progress=False
             )
 
-            if df.empty or len(df) < min_consecutive:
+            if df.empty:
                 progress.progress((i + 1) / len(tickers))
                 continue
 
             df = clean_yfinance_df(df)
             df = df.dropna()
+
+            if exclude_today:
+                df = df[df.index.date < date.today()]
+
+            if len(df) < min_consecutive:
+                progress.progress((i + 1) / len(tickers))
+                continue
 
             open_ = df["Open"].astype(float)
             high = df["High"].astype(float)
@@ -118,11 +120,18 @@ if st.button("🚀 Taramayı Başlat"):
                 else:
                     break
 
-            if consecutive >= min_consecutive:
-                last_body = float(body.iloc[-1])
-                last_range = float(candle_range.iloc[-1])
-                last_ratio = last_body / last_range if last_range > 0 else 0
+            last_body = float(body.iloc[-1])
+            last_range = float(candle_range.iloc[-1])
+            last_ratio = last_body / last_range if last_range > 0 else 0
 
+            all_debug.append({
+                "Hisse": ticker,
+                "Son Tarih": df.index[-1].strftime("%Y-%m-%d"),
+                "Peş Peşe Doji": consecutive,
+                "Son Doji Oranı": round(last_ratio, 4)
+            })
+
+            if consecutive >= min_consecutive:
                 results.append({
                     "Hisse": ticker,
                     "Peş Peşe Doji": consecutive,
@@ -136,9 +145,10 @@ if st.button("🚀 Taramayı Başlat"):
 
         progress.progress((i + 1) / len(tickers))
 
-    result_df = pd.DataFrame(results)
-
     status.write("Tarama tamamlandı.")
+
+    result_df = pd.DataFrame(results)
+    debug_df = pd.DataFrame(all_debug)
 
     if errors:
         with st.expander("Hata veren hisseler"):
@@ -150,3 +160,6 @@ if st.button("🚀 Taramayı Başlat"):
     else:
         st.success(f"{len(result_df)} hisse bulundu.")
         st.dataframe(result_df, use_container_width=True)
+
+    with st.expander("Tüm hisselerin doji kontrol sonucu"):
+        st.dataframe(debug_df, use_container_width=True)
