@@ -8,78 +8,23 @@ st.set_page_config(
     layout="wide"
 )
 
-DEFAULT_TICKERS = [
-"A1CAP.IS","A1YEN.IS","ACSEL.IS","ADEL.IS","ADESE.IS","ADGYO.IS","AEFES.IS","AFYON.IS","AGESA.IS","AGHOL.IS",
-"AGROT.IS","AGYO.IS","AHGAZ.IS","AHSGY.IS","AKBNK.IS","AKCNS.IS","AKENR.IS","AKFGY.IS","AKFIS.IS","AKFYE.IS",
-"AKGRT.IS","AKMGY.IS","AKSA.IS","AKSEN.IS","AKSGY.IS","AKSUE.IS","AKYHO.IS","ALARK.IS","ALBRK.IS","ALCAR.IS",
-"ALCTL.IS","ALFAS.IS","ALGYO.IS","ALKA.IS","ALKIM.IS","ALKLC.IS","ALTNY.IS","ALVES.IS","ANELE.IS","ANGEN.IS",
-"ANHYT.IS","ANSGR.IS","APBDL.IS","APLIB.IS","ARASE.IS","ARCLK.IS","ARDYZ.IS","ARENA.IS","ARMGD.IS","ARSAN.IS",
-"ARTMS.IS","ARZUM.IS","ASELS.IS","ASGYO.IS","ASTOR.IS","ASUZU.IS","ATAGY.IS","ATAKP.IS","ATATP.IS","ATEKS.IS",
-"ATLAS.IS","ATSYH.IS","AVGYO.IS","AVHOL.IS","AVOD.IS","AVPGY.IS","AVTUR.IS","AYCES.IS","AYDEM.IS","AYEN.IS",
-"AYES.IS","AYGAZ.IS","AZTEK.IS","BAGFS.IS","BAHKM.IS","BAKAB.IS","BALAT.IS","BALSU.IS","BANVT.IS","BARMA.IS",
-"BASCM.IS","BASGZ.IS","BAYRK.IS","BEGYO.IS","BERA.IS","BEYAZ.IS","BFREN.IS","BIENY.IS","BIGCH.IS","BIGEN.IS",
-"BIMAS.IS","BINBN.IS","BINHO.IS","BIOEN.IS","BIZIM.IS","BJKAS.IS","BLCYT.IS","BMSCH.IS","BMSTL.IS","BNTAS.IS",
-"BOBET.IS","BORLS.IS","BORSK.IS","BOSSA.IS","BRISA.IS","BRKO.IS","BRKSN.IS","BRKVY.IS","BRLSM.IS","BRMEN.IS",
-"BRSAN.IS","BRYAT.IS","BSOKE.IS","BTCIM.IS","BUCIM.IS","BULGS.IS","BURCE.IS","BURVA.IS","BVSAN.IS","BYDNR.IS",
-"CANTE.IS","CASA.IS","CATES.IS","CCOLA.IS","CELHA.IS","CEMAS.IS","CEMTS.IS","CEMZY.IS","CEOEM.IS","CGCAM.IS",
-"CIMSA.IS","CLEBI.IS","CMBTN.IS","CMENT.IS","CONSE.IS","COSMO.IS","CRDFA.IS","CRFSA.IS","CUSAN.IS","CVKMD.IS",
-"CWENE.IS","DAGHL.IS","DAGI.IS","DAPGM.IS","DARDL.IS","DCTTR.IS","DENGE.IS","DERHL.IS","DERIM.IS","DESA.IS",
-"DESPC.IS","DEVA.IS","DGATE.IS","DGGYO.IS","DGNMO.IS","DIRIT.IS","DITAS.IS","DMRGD.IS","DMSAS.IS","DNISI.IS",
-"DOAS.IS","DOBUR.IS","DOCO.IS","DOFER.IS","DOGUB.IS","DOHOL.IS","DOKTA.IS","DSTKF.IS","DURDO.IS","DURKN.IS",
-"DYOBY.IS","DZGYO.IS","EBEBK.IS","ECILC.IS","ECZYT.IS","EDATA.IS","EDIP.IS","EFORC.IS","EGEEN.IS","EGEGY.IS",
-"EGEPO.IS","EGGUB.IS","EGPRO.IS","EGSER.IS","EKGYO.IS","EKIZ.IS","EKOS.IS","EKSUN.IS","ELITE.IS","EMKEL.IS",
-"EMNIS.IS","ENDAE.IS","ENERY.IS","ENJSA.IS","ENKAI.IS","ENSRI.IS","ENTRA.IS","EPLAS.IS","ERBOS.IS","ERCB.IS",
-"EREGL.IS","ERSU.IS","ESCAR.IS","ESCOM.IS","ESEN.IS","ETILR.IS","ETYAT.IS","EUHOL.IS","EUKYO.IS","EUPWR.IS",
-"EUREN.IS","EUYO.IS","EYGYO.IS","FADE.IS","FENER.IS","FLAP.IS","FMIZP.IS","FONET.IS","FORMT.IS","FORTE.IS",
-"FRIGO.IS","FROTO.IS","FZLGY.IS","GARAN.IS","GARFA.IS","GEDIK.IS","GEDZA.IS","GENIL.IS","GENTS.IS","GEREL.IS",
-"GESAN.IS","GIPTA.IS","GLBMD.IS","GLCVY.IS","GLDTR.IS","GLRMK.IS","GLRYH.IS","GLYHO.IS","GMSTR.IS","GMTAS.IS",
-"GOKNR.IS","GOLTS.IS","GOODY.IS","GOZDE.IS","GRNYO.IS","GRSEL.IS","GRTHO.IS","GSDDE.IS","GSDHO.IS","GSRAY.IS",
-"GUBRF.IS","GUNDG.IS","GWIND.IS","GZNMI.IS","HALKB.IS","HALKS.IS","HATEK.IS","HATSN.IS","HDFGS.IS","HEDEF.IS",
-"HEKTS.IS","HKTM.IS","HLGYO.IS","HOROZ.IS","HRKET.IS","HTTBT.IS","HUBVC.IS","HUNER.IS","HURGZ.IS","ICBCT.IS",
-"ICUGS.IS","IDGYO.IS","IEYHO.IS","IHAAS.IS","IHEVA.IS","IHGZT.IS","IHLAS.IS","IHLGM.IS","IHYAY.IS","IMASM.IS",
-"INDES.IS","INFO.IS","INGRM.IS","INTEK.IS","INTEM.IS","INVEO.IS","INVES.IS","IPEKE.IS","ISATR.IS","ISBIR.IS",
-"ISBTR.IS","ISCTR.IS","ISDMR.IS","ISFIN.IS","ISGLK.IS","ISGSY.IS","ISGYO.IS","ISIST.IS","ISKPL.IS","ISKUR.IS",
-"ISMEN.IS","ISSEN.IS","ISYAT.IS","IZENR.IS","IZFAS.IS","IZINV.IS","IZMDC.IS","JANTS.IS","KAPLM.IS","KAREL.IS",
-"KARSN.IS","KARTN.IS","KATMR.IS","KAYSE.IS","KBORU.IS","KCAER.IS","KCHOL.IS","KENT.IS","KERVN.IS","KFEIN.IS",
-"KGYO.IS","KIMMR.IS","KLGYO.IS","KLKIM.IS","KLMSN.IS","KLNMA.IS","KLRHO.IS","KLSER.IS","KLSYN.IS","KLYPV.IS",
-"KMPUR.IS","KNFRT.IS","KOCMT.IS","KONKA.IS","KONTR.IS","KONYA.IS","KOPOL.IS","KORDS.IS","KOTON.IS","KOZAA.IS",
-"KOZAL.IS","KRDMA.IS","KRDMB.IS","KRDMD.IS","KRGYO.IS","KRONT.IS","KRPLS.IS","KRSTL.IS","KRTEK.IS","KRVGD.IS",
-"KSTUR.IS","KTLEV.IS","KTSKR.IS","KUTPO.IS","KUVVA.IS","KUYAS.IS","KZBGY.IS","KZGYO.IS","LIDER.IS","LIDFA.IS",
-"LILAK.IS","LINK.IS","LKMNH.IS","LMKDC.IS","LOGO.IS","LRSHO.IS","LUKSK.IS","LYDHO.IS","LYDYE.IS","MAALT.IS",
-"MACKO.IS","MAGEN.IS","MAKIM.IS","MAKTK.IS","MANAS.IS","MARBL.IS","MARKA.IS","MARTI.IS","MAVI.IS","MEDTR.IS",
-"MEGAP.IS","MEGMT.IS","MEKAG.IS","MEPET.IS","MERCN.IS","MERIT.IS","MERKO.IS","METRO.IS","METUR.IS","MGROS.IS",
-"MHRGY.IS","MIATK.IS","MMCAS.IS","MNDRS.IS","MNDTR.IS","MOBTL.IS","MOGAN.IS","MOPAS.IS","MPARK.IS","MRGYO.IS",
-"MRSHL.IS","MSGYO.IS","MTRKS.IS","MTRYO.IS","MZHLD.IS","NATEN.IS","NETAS.IS","NIBAS.IS","NTGAZ.IS","NTHOL.IS",
-"NUGYO.IS","NUHCM.IS","OBAMS.IS","OBASE.IS","ODAS.IS","ODINE.IS","OFSYM.IS","ONCSM.IS","ONRYT.IS","OPK30.IS",
-"OPT25.IS","OPTGY.IS","OPX30.IS","ORCAY.IS","ORGE.IS","ORMA.IS","OSMEN.IS","OSTIM.IS","OTKAR.IS","OTTO.IS",
-"OYAKC.IS","OYAYO.IS","OYLUM.IS","OYYAT.IS","OZATD.IS","OZGYO.IS","OZKGY.IS","OZRDN.IS","OZSUB.IS","OZYSR.IS",
-"PAGYO.IS","PAMEL.IS","PAPIL.IS","PARSN.IS","PASEU.IS","PATEK.IS","PCILT.IS","PEKGY.IS","PENGD.IS","PENTA.IS",
-"PETKM.IS","PETUN.IS","PGSUS.IS","PINSU.IS","PKART.IS","PKENT.IS","PLTUR.IS","PNLSN.IS","PNSUT.IS","POLHO.IS",
-"POLTK.IS","PRDGS.IS","PRKAB.IS","PRKME.IS","PRZMA.IS","PSDTC.IS","PSGYO.IS","QNBFK.IS","QNBTR.IS","QTEMZ.IS",
-"QUAGR.IS","RALYH.IS","RAYSG.IS","REEDR.IS","RGYAS.IS","RNPOL.IS","RODRG.IS","RTALB.IS","RUBNS.IS","RUZYE.IS",
-"RYGYO.IS","RYSAS.IS","SAFKR.IS","SAHOL.IS","SAMAT.IS","SANEL.IS","SANFM.IS","SANKO.IS","SARKY.IS","SASA.IS",
-"SAYAS.IS","SDTTR.IS","SEGMN.IS","SEGYO.IS","SEKFK.IS","SEKUR.IS","SELEC.IS","SELGD.IS","SELVA.IS","SERNT.IS",
-"SEYKM.IS","SILVR.IS","SISE.IS","SKBNK.IS","SKTAS.IS","SKYLP.IS","SKYMD.IS","SMART.IS","SMRTG.IS","SMRVA.IS",
-"SNGYO.IS","SNICA.IS","SNKRN.IS","SNPAM.IS","SODSN.IS","SOKE.IS","SOKM.IS","SONME.IS","SRVGY.IS","SUMAS.IS",
-"SUNTK.IS","SURGY.IS","SUWEN.IS","TABGD.IS","TARKM.IS","TATEN.IS","TATGD.IS","TAVHL.IS","TBORG.IS","TCELL.IS",
-"TCKRC.IS","TDGYO.IS","TEKTU.IS","TERA.IS","TEZOL.IS","TGSAS.IS","THYAO.IS","TKFEN.IS","TKNSA.IS","TLMAN.IS",
-"TMPOL.IS","TMSN.IS","TNZTP.IS","TOASO.IS","TRCAS.IS","TRGYO.IS","TRILC.IS","TSGYO.IS","TSKB.IS","TSPOR.IS",
-"TTKOM.IS","TTRAK.IS","TUCLK.IS","TUKAS.IS","TUPRS.IS","TUREX.IS","TURGG.IS","TURSG.IS","UFUK.IS","ULAS.IS",
-"ULKER.IS","ULUFA.IS","ULUSE.IS","ULUUN.IS","UMPAS.IS","UNLU.IS","USAK.IS","USDTR.IS","VAKBN.IS","VAKFN.IS",
-"VAKKO.IS","VANGD.IS","VBTYZ.IS","VERTU.IS","VERUS.IS","VESBE.IS","VESTL.IS","VKFYO.IS","VKGYO.IS","VKING.IS",
-"VRGYO.IS","VSNMD.IS","YAPRK.IS","YATAS.IS","YAYLA.IS","YBTAS.IS","YEOTK.IS","YESIL.IS","YGGYO.IS","YGYO.IS",
-"YIGIT.IS","YKBNK.IS","YKSLN.IS","YONGA.IS","YUNSA.IS","YYAPI.IS","YYLGD.IS","Z30EA.IS","Z30KE.IS","Z30KP.IS",
-"ZEDUR.IS","ZELOT.IS","ZGOLD.IS","ZOREN.IS","ZPBDL.IS","ZPLIB.IS","ZRGYO.IS"
-]
-
 st.title("📊 Peş Peşe Doji Tarayıcı")
 
 st.write("Günlük mumlarda son mumdan geriye doğru peş peşe doji yapan hisseleri tarar.")
 
 tickers_text = st.text_area(
     "Hisse listesi",
-    value="\n".join(DEFAULT_TICKERS),
-    height=260
+    value="""FRIGO.IS
+SNGYO.IS
+TURSG.IS
+THYAO.IS
+ASELS.IS
+SISE.IS
+KCHOL.IS
+SAHOL.IS
+EREGL.IS
+BIMAS.IS""",
+    height=220
 )
 
 doji_ratio = st.slider(
@@ -103,14 +48,21 @@ period = st.selectbox(
     index=1
 )
 
+def clean_yfinance_df(df):
+    if isinstance(df.columns, pd.MultiIndex):
+        df.columns = df.columns.get_level_values(0)
+    df = df.loc[:, ~df.columns.duplicated()]
+    return df
+
 if st.button("🚀 Taramayı Başlat"):
     tickers = [
-        x.strip().upper()
+        x.strip().upper().replace('"', "").replace(",", "")
         for x in tickers_text.splitlines()
         if x.strip()
     ]
 
     results = []
+    errors = []
     progress = st.progress(0)
     status = st.empty()
 
@@ -130,19 +82,25 @@ if st.button("🚀 Taramayı Başlat"):
                 progress.progress((i + 1) / len(tickers))
                 continue
 
+            df = clean_yfinance_df(df)
             df = df.dropna()
 
-            body = (df["Open"] - df["Close"]).abs()
-            candle_range = df["High"] - df["Low"]
+            open_ = df["Open"].astype(float)
+            high = df["High"].astype(float)
+            low = df["Low"].astype(float)
+            close = df["Close"].astype(float)
 
-            df["doji"] = (
+            body = (open_ - close).abs()
+            candle_range = high - low
+
+            doji = (
                 (candle_range > 0) &
                 (body <= candle_range * doji_ratio)
             )
 
             consecutive = 0
 
-            for val in reversed(df["doji"].tolist()):
+            for val in reversed(doji.tolist()):
                 if bool(val):
                     consecutive += 1
                 else:
@@ -157,21 +115,23 @@ if st.button("🚀 Taramayı Başlat"):
                     "Hisse": ticker,
                     "Peş Peşe Doji": consecutive,
                     "Son Tarih": df.index[-1].strftime("%Y-%m-%d"),
-                    "Açılış": round(float(df["Open"].iloc[-1]), 2),
-                    "Yüksek": round(float(df["High"].iloc[-1]), 2),
-                    "Düşük": round(float(df["Low"].iloc[-1]), 2),
-                    "Kapanış": round(float(df["Close"].iloc[-1]), 2),
+                    "Son Kapanış": round(float(close.iloc[-1]), 2),
                     "Doji Oranı": round(last_ratio, 4)
                 })
 
         except Exception as e:
-            st.warning(f"{ticker} hata verdi: {e}")
+            errors.append(f"{ticker}: {e}")
 
         progress.progress((i + 1) / len(tickers))
 
     result_df = pd.DataFrame(results)
 
     status.write("Tarama tamamlandı.")
+
+    if errors:
+        with st.expander("Hata veren hisseler"):
+            for err in errors:
+                st.write(err)
 
     if result_df.empty:
         st.error("Sonuç bulunamadı.")
