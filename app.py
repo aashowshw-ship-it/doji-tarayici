@@ -1,6 +1,7 @@
 import streamlit as st
 import yfinance as yf
 import pandas as pd
+import ast
 
 st.set_page_config(
     page_title="Doji Tarayıcı",
@@ -10,21 +11,16 @@ st.set_page_config(
 
 st.title("📊 Peş Peşe Doji Tarayıcı")
 
-st.write("Günlük mumlarda son mumdan geriye doğru peş peşe doji yapan hisseleri tarar.")
+st.write("Hisse listesini köşeli parantezli Python liste formatında yapıştırabilirsin.")
+
+default_list = '''[
+"FRIGO.IS","SNGYO.IS","TURSG.IS"
+]'''
 
 tickers_text = st.text_area(
     "Hisse listesi",
-    value="""FRIGO.IS
-SNGYO.IS
-TURSG.IS
-THYAO.IS
-ASELS.IS
-SISE.IS
-KCHOL.IS
-SAHOL.IS
-EREGL.IS
-BIMAS.IS""",
-    height=220
+    value=default_list,
+    height=260
 )
 
 doji_ratio = st.slider(
@@ -48,23 +44,40 @@ period = st.selectbox(
     index=1
 )
 
+
+def parse_tickers(text):
+    try:
+        parsed = ast.literal_eval(text)
+        if isinstance(parsed, list):
+            return [str(x).strip().upper() for x in parsed if str(x).strip()]
+    except Exception:
+        pass
+
+    return [
+        x.strip().upper().replace('"', "").replace(",", "")
+        for x in text.splitlines()
+        if x.strip()
+    ]
+
+
 def clean_yfinance_df(df):
     if isinstance(df.columns, pd.MultiIndex):
         df.columns = df.columns.get_level_values(0)
     df = df.loc[:, ~df.columns.duplicated()]
     return df
 
+
 if st.button("🚀 Taramayı Başlat"):
-    tickers = [
-        x.strip().upper().replace('"', "").replace(",", "")
-        for x in tickers_text.splitlines()
-        if x.strip()
-    ]
+    tickers = parse_tickers(tickers_text)
 
     results = []
     errors = []
     progress = st.progress(0)
     status = st.empty()
+
+    if not tickers:
+        st.error("Hisse listesi boş.")
+        st.stop()
 
     for i, ticker in enumerate(tickers):
         try:
@@ -99,7 +112,6 @@ if st.button("🚀 Taramayı Başlat"):
             )
 
             consecutive = 0
-
             for val in reversed(doji.tolist()):
                 if bool(val):
                     consecutive += 1
